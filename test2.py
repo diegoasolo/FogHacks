@@ -4,10 +4,10 @@ diffractsim.set_backend("CPU") #Change the string to "CUDA" to use GPU accelerat
 from diffractsim_main.diffractsim import MonochromaticField, ApertureFromImage, Lens, mm, um, nm, cm, FourierPhaseRetrieval, PSF_convolution, apply_transfer_function, bd
 
 
-# # Generate a Fourier plane phase hologram
-# PR = FourierPhaseRetrieval(target_amplitude_path = './diffractsim_main/examples/apertures/rings.jpg', new_size= (400,400), pad = (200,200))
-# PR.retrieve_phase_mask(max_iter = 200, method = 'Conjugate-Gradient')
-# PR.save_retrieved_phase_as_image('rings_phase_hologram.png')
+# Generate a Fourier plane phase hologram, comment out if you already have a hologram
+PR = FourierPhaseRetrieval(target_amplitude_path = './diffractsim_main/examples/apertures/rings.jpg', new_size= (400,400), pad = (200,200))
+PR.retrieve_phase_mask(max_iter = 200, method = 'Conjugate-Gradient')
+PR.save_retrieved_phase_as_image('rings_phase_hologram.png')
 
 
 #Add a plane wave
@@ -23,9 +23,9 @@ F.add(ApertureFromImage(
 
 
 
-# plot colors at z = 0
-#rgb = F.get_colors()
-#F.plot_colors(rgb)
+plot colors at z = 0
+rgb = F.get_colors()
+F.plot_colors(rgb)
 
 
 # set distance to image plane 
@@ -36,7 +36,7 @@ F.add(Lens(f = z))
 
 
 
-# Build a Henyey-Greenstein PSF for Mie scattering (forward-peaked)
+### Build a Henyey-Greenstein PSF for Mie scattering (forward-peaked)
 def hg_phase_function(theta, g):
     """Henyey-Greenstein phase function"""
     ct = bd.cos(theta)
@@ -44,11 +44,11 @@ def hg_phase_function(theta, g):
     return (1 - g*g) / (4*bd.pi*denom)
 
 # Parameters for Mie scattering
-g = 0.5  # anisotropy parameter (0=isotropic, →1 forward-peaked)
+g = 0.7  # anisotropy parameter (0=isotropic, →1 forward-peaked)
 fog_scale = 300 * um  # characteristic scattering scale in meters
 theta_max = bd.pi/12  # 15 degrees max angle
 
-# Create a proper Henyey-Greenstein PSF that varies with g
+
 # Map spatial coordinates to scattering angles
 r = bd.sqrt(F.xx**2 + F.yy**2)
 theta = r / fog_scale  # small-angle approximation: theta ≈ r/L
@@ -87,12 +87,12 @@ F.plot_colors(rgb)
 
 
 
-# #plot longitudinal profile
-# longitudinal_profile_rgb, longitudinal_profile_E, extent = F.get_longitudinal_profile( start_distance = 0*cm , end_distance = z , steps = 80) 
-# #plot colors
-# F.plot_longitudinal_profile_colors(longitudinal_profile_rgb = longitudinal_profile_rgb, extent = extent)
-# print(longitudinal_profile_rgb.shape)
+#plot longitudinal profile, comment out if not needed
+longitudinal_profile_rgb, longitudinal_profile_E, extent = F.get_longitudinal_profile( start_distance = 0*cm , end_distance = z , steps = 80) 
+#plot colors
+F.plot_longitudinal_profile_colors(longitudinal_profile_rgb = longitudinal_profile_rgb, extent = extent)
+print(longitudinal_profile_rgb.shape)
 
 
-# F.plot_longitudinal_profile_intensity(longitudinal_profile_E = longitudinal_profile_E, extent = extent, square_root = True)
-# print(longitudinal_profile_E.shape)
+F.plot_longitudinal_profile_intensity(longitudinal_profile_E = longitudinal_profile_E, extent = extent, square_root = True)
+print(longitudinal_profile_E.shape)
