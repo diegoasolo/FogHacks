@@ -4,10 +4,10 @@ diffractsim.set_backend("CPU") #Change the string to "CUDA" to use GPU accelerat
 from diffractsim_main.diffractsim import MonochromaticField, ApertureFromImage, Lens, mm, um, nm, cm, FourierPhaseRetrieval, PSF_convolution, apply_transfer_function, bd, SLM
 
 
-# Generate a Fourier plane phase hologram, comment out if already generated
-PR = FourierPhaseRetrieval(target_amplitude_path = './diffractsim_main/examples/apertures/rings.jpg', new_size= (400,400), pad = (200,200))
-PR.retrieve_phase_mask(max_iter = 200, method = 'Conjugate-Gradient')
-PR.save_retrieved_phase_as_image('rings_phase_hologram.png')
+# # Generate a Fourier plane phase hologram, comment out if already generated
+# PR = FourierPhaseRetrieval(target_amplitude_path = './diffractsim_main/examples/apertures/rings.jpg', new_size= (400,400), pad = (200,200))
+# PR.retrieve_phase_mask(max_iter = 200, method = 'Conjugate-Gradient')
+# PR.save_retrieved_phase_as_image('rings_phase_hologram.png')
 
 class PhaseMaskScattering:
     """
@@ -15,7 +15,7 @@ class PhaseMaskScattering:
     scattering events in fog/atmospheric conditions.
     """
     
-    def __init__(self, simulation, num_masks=5, scattering_strength=0.5, mask_size=5*mm):
+    def __init__(self, simulation, num_masks=5, scattering_strength=0.5, mask_size=5*mm, phase_mask_complexity=8, layer_thickness=1*mm):
         """
         Initialize the phase mask scattering system.
         
@@ -29,12 +29,18 @@ class PhaseMaskScattering:
             Strength of scattering (0.0 = no scattering, 1.0 = maximum scattering)
         mask_size : float
             Physical size of each phase mask
+        phase_mask_complexity : int
+            Number of spatial frequencies for each phase mask
+        layer_thickness : float
+            Thickness of each scattering layer
         """
         self.simulation = simulation
         self.num_masks = num_masks
         self.scattering_strength = scattering_strength
         self.mask_size = mask_size
         self.phase_masks = []
+        self.phase_mask_complexity = phase_mask_complexity
+        self.layer_thickness = layer_thickness
         
         # Generate random phase masks
         self._generate_phase_masks()
@@ -48,7 +54,7 @@ class PhaseMaskScattering:
         phase = bd.zeros_like(xx)
         
         # Add multiple random spatial frequencies for realistic scattering
-        num_frequencies = 8
+        num_frequencies = self.phase_mask_complexity
         for i in range(num_frequencies):
             # Random spatial frequency
             fx = (bd.random.random() - 0.5) * 2 / (self.mask_size / 10)  # Normalized frequency
@@ -103,7 +109,7 @@ class PhaseMaskScattering:
             # Propagate a small distance to simulate scattering layer thickness
             # Each scattering layer is separated by a small distance
             
-            self.simulation.propagate(layer_thickness)
+            self.simulation.propagate(self.layer_thickness)
             
             print(f"Applied phase mask {i+1}/{len(self.phase_masks)}")
     
@@ -111,7 +117,7 @@ class PhaseMaskScattering:
         """
         Return the total distance added by all scattering masks.
         """
-        return self.num_masks * layer_thickness
+        return self.num_masks * self.layer_thickness
     
     def visualize_phase_masks(self, save_images=True):
         """
@@ -193,6 +199,7 @@ class PhaseMaskScattering:
 
 
 
+
 ### Main simulation code ###
 
 
@@ -209,9 +216,9 @@ F.add(ApertureFromImage(
 
 
 
-#plot colors at z = 0
-rgb = F.get_colors()
-F.plot_colors(rgb)
+# #plot colors at z = 0
+# rgb = F.get_colors()
+# F.plot_colors(rgb)
 
 
 # set distance to image plane 
@@ -220,23 +227,29 @@ z = 200*cm
 # add lens to focus the hologram at z 
 F.add(Lens(f = z))
 
-# Set parameters for the phase mask scattering here
+### Set parameters for the phase mask scattering here ###
 num_scattering_masks = 4  # Number of phase masks (scattering layers)
 scattering_strength = 0.1  # Scattering strength (0.0 = no scattering, 1.0 = maximum)
 mask_size = 20 * mm  # Size of each phase mask (square aperture size)
+phase_mask_complexity = 8 # Number of spatial frequencies for each phase mask
 layer_thickness = 1 * mm  # Thickness of each scattering layer
+
 
 print(f"Phase Mask Scattering Parameters:")
 print(f"  Number of masks: {num_scattering_masks}")
 print(f"  Scattering strength: {scattering_strength}")
 print(f"  Mask size: {mask_size/mm:.1f} mm")
+print(f"  Phase mask complexity: {phase_mask_complexity}")
+print(f"  Layer thickness: {layer_thickness/mm:.1f} mm")
 
 # Create and apply the new scattering method
 scattering_system = PhaseMaskScattering(
     simulation=F,
     num_masks=num_scattering_masks,
     scattering_strength=scattering_strength,
-    mask_size=mask_size
+    mask_size=mask_size,
+    phase_mask_complexity=phase_mask_complexity,
+    layer_thickness=layer_thickness,
 )
 
 # Visualize the scattering phase masks, set save_images=False to avoid saving files
@@ -258,12 +271,12 @@ F.plot_colors(rgb)
 
 
 
-#plot longitudinal profile, comment out if not needed
-longitudinal_profile_rgb, longitudinal_profile_E, extent = F.get_longitudinal_profile( start_distance = 0*cm , end_distance = z , steps = 80) 
-#plot colors
-F.plot_longitudinal_profile_colors(longitudinal_profile_rgb = longitudinal_profile_rgb, extent = extent)
-print(longitudinal_profile_rgb.shape)
+# #plot longitudinal profile, comment out if not needed
+# longitudinal_profile_rgb, longitudinal_profile_E, extent = F.get_longitudinal_profile( start_distance = 0*cm , end_distance = z , steps = 80) 
+# #plot colors
+# F.plot_longitudinal_profile_colors(longitudinal_profile_rgb = longitudinal_profile_rgb, extent = extent)
+# print(longitudinal_profile_rgb.shape)
 
 
-F.plot_longitudinal_profile_intensity(longitudinal_profile_E = longitudinal_profile_E, extent = extent, square_root = True)
-print(longitudinal_profile_E.shape)
+# F.plot_longitudinal_profile_intensity(longitudinal_profile_E = longitudinal_profile_E, extent = extent, square_root = True)
+# print(longitudinal_profile_E.shape)
