@@ -6,46 +6,10 @@ sys.path.insert(0, os.path.split(os.path.realpath(__file__))[0] + "/../../common
 import example_helper
 
 # creates an Ajile project and returns it
-def CreateProject(sequenceID=1, sequenceRepeatCount=10, frameTime_ms=-1, components=None, image_name=None):
-    """
-    Create an Ajile project to display an image from the images folder.
-    
-    Parameters:
-    -----------
-    sequenceID : int
-        Sequence ID for the project
-    sequenceRepeatCount : int
-        Number of times to repeat the sequence
-    frameTime_ms : int
-        Frame time in milliseconds (-1 for default)
-    components : optional
-        Components to set for the project
-    image_name : str, optional
-        Name of the image file (with or without extension).
-        If None, uses the first available image.
-    """
+def CreateProject(sequenceID=1, sequenceRepeatCount=10, frameTime_ms=-1, components=None):
     projectName = "display_image"
     currentPath = os.path.dirname(os.path.realpath(__file__))
-    imagesPath = os.path.join(currentPath, "images")
-    
-    # Determine which image to load
-    if image_name is None:
-        # Try to find any PNG image in the images folder
-        from pathlib import Path
-        image_files = list(Path(imagesPath).glob("*.png"))
-        if not image_files:
-            raise FileNotFoundError(f"No PNG images found in {imagesPath}")
-        filename = str(image_files[0])
-        print(f"No image specified, using: {image_files[0].name}")
-    else:
-        # Use specified image name
-        filename = image_name
-        if not filename.endswith('.png'):
-            filename = filename + '.png'
-        filename = os.path.join(imagesPath, filename)
-        
-        if not os.path.exists(filename):
-            raise FileNotFoundError(f"Image not found: {filename}")
+    filename = os.path.join(currentPath, "images", "USAF_test1.png")
     
     if frameTime_ms < 0:
         frameTime_ms = 10000
@@ -82,13 +46,4 @@ def CreateProject(sequenceID=1, sequenceRepeatCount=10, frameTime_ms=-1, compone
 
         
 if __name__ == "__main__":
-    # Get image name from command line if provided
-    image_name = None
-    if len(sys.argv) > 1:
-        image_name = sys.argv[1]
-    
-    # Create a wrapper function that passes the image_name
-    def CreateProjectWrapper(sequenceID=1, sequenceRepeatCount=10, frameTime_ms=-1, components=None):
-        return CreateProject(sequenceID, sequenceRepeatCount, frameTime_ms, components, image_name)
-    
-    example_helper.RunExample(CreateProjectWrapper)
+    example_helper.RunExample(CreateProject)
