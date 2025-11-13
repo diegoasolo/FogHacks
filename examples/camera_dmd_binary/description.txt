@@ -1,0 +1,5 @@
+Name=Camera and DMD Binary Pattern Capture
+RequiredDevices=DMD_4500_DEVICE_TYPE,CMV_4000_MONO_DEVICE_TYPE
+Categories=DMD and Camera,Binary
+Description=An example where a DMD displays a binary (1-bit) sequence of Gray Code patterns at a configurable frame rate and a synchronized camera captures images of the patterns using trigger rules. Gray Code patterns are used in structured light 3D imaging. The patterns are generated programatically with OpenCV and converted and displayed using the Ajile API, and the sequence of captured camera images read out, displayed and saved to file.
+CreateProjectProgram=python/camera_dmd_binary_example.py

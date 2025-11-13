@@ -1,0 +1,5 @@
+Name=DMD Binary Output Trigger
+RequiredDevices=DMD_4500_DEVICE_TYPE
+Categories=DMD,Binary,Triggering
+Description=An example where a binary (1-bit) checkerboard pattern and its inverse are displayed by a DMD with an output trigger which signals when the next DMD frame starts. A single trigger rule specifies that when the DMD frame starts a trigger signal on External Trigger Output 1 will be output with a hold time of half the frame rate. A separate Arduino program is contained in examples/arduino/TriggerTester.ino which can be used to monitor the external trigger signal where an LED on the Arduino flashes when an output trigger is detected (alternatively the output signal can be viewed on an oscilloscope). 
+CreateProjectProgram=python/dmd_binary_triggerout_example.py

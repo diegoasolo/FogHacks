@@ -1,0 +1,5 @@
+Name=DMD Binary Checkerboard Patterns
+RequiredDevices=DMD_4500_DEVICE_TYPE
+Categories=DMD,Binary,Image Generating
+Description=A simple example where a DMD displays a binary (1-bit) checkerboard pattern and its inverse at a configurable frame rate. The checkerboard pattern is generated programatically with OpenCV and converted and displayed using the Ajile API.
+CreateProjectProgram=python/dmd_binary_checkerboard_example.py

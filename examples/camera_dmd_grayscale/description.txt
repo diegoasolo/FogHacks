@@ -1,0 +1,5 @@
+Name=Camera and DMD Grayscale Pattern Capture
+RequiredDevices=DMD_4500_DEVICE_TYPE,CMV_4000_MONO_DEVICE_TYPE
+Categories=DMD and Camera,Grayscale
+Description=An example where a DMD displays a sequence of 8-bit grayscale sinusoid patterns and a synchronized camera captures images of the patterns using trigger rules. The sinusoid patterns are generated programatically and converted to and displayed as Ajile Images, and the sequence of captured camera images read out, displayed and saved to file.
+CreateProjectProgram=python/camera_dmd_grayscale_example.py

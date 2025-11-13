@@ -1,0 +1,5 @@
+Name=DMD Binary Graycode Patterns
+RequiredDevices=DMD_4500_DEVICE_TYPE
+Categories=DMD,Binary,Image Generating
+Description=An example where a DMD displays a binary (1-bit) sequence of Gray Code patterns at a configurable frame rate. Gray Code patterns are used in structured light 3D imaging. The patterns are generated programatically with OpenCV and converted and displayed using the Ajile API.
+CreateProjectProgram=python/dmd_binary_graycode_example.py

@@ -1,0 +1,5 @@
+Name=DMD Color Test Images
+RequiredDevices=DMD_4500_DEVICE_TYPE
+Categories=DMD,Color,Image Reading
+Description=An example where a DMD displays a sequence of 24-bit color (3 channel, 8-bit per channel) images. The sequence of images are read from standard image files and displayed by the DMD using the Ajile API.
+CreateProjectProgram=python/dmd_color_testimages_example.py

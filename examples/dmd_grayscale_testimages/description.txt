@@ -1,0 +1,5 @@
+Name=DMD Grayscale Test Images
+RequiredDevices=DMD_4500_DEVICE_TYPE
+Categories=DMD,Grayscale,Image Reading
+Description=An example where a DMD displays a sequence of grayscale (8-bit) images. The sequence of images are read from standard image files and displayed by the DMD using the Ajile API.
+CreateProjectProgram=python/dmd_grayscale_testimages_example.py

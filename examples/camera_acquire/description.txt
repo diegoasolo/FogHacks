@@ -1,0 +1,4 @@
+Name=Camera Acquire Images
+RequiredDevices=CMV_4000_MONO_DEVICE_TYPE
+Categories=Camera
+Description=An example of the camera acquire interface. Unlike the RetrieveImage API, with the AcquireImages API the camera automatically sends the requested number of images to the host immediately when they are captured. The user application then gets the acquired images from the acquired image FIFO queue and in this example saves them to file. 

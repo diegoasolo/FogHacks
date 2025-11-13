@@ -1,0 +1,5 @@
+Name=Camera Output Trigger Capture
+RequiredDevices=CMV_4000_MONO_DEVICE_TYPE
+Categories=Camera,Triggering
+Description=An example of the camera capturing a sequence of images with an output trigger which signals when the camera exposure starts at the beginning of each frame frame starts. A single trigger rule specifies that when the camera frame exposure starts a trigger signal on External Trigger Output 1 will be output with a hold time of half the frame rate. Optionally the bit depth, region of interest, and row skip properties can be changed with command line arguments. The sequence of captured camera images read out, displayed and saved to file.
+CreateProjectProgram=python/camera_triggerout_example.py

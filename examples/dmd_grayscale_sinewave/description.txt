@@ -1,0 +1,5 @@
+Name=DMD Grayscale Sinusoid Images
+RequiredDevices=DMD_4500_DEVICE_TYPE
+Categories=DMD,Grayscale,Image Generating
+Description=An example where a DMD displays a sequence of grayscale 8-bit and 12-bit sinusoid patterns. The sinusoid patterns are generated programatically and converted to and displayed as Ajile Images.
+CreateProjectProgram=python/dmd_grayscale_sinewave_example.py

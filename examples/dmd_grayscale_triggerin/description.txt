@@ -1,0 +1,5 @@
+Name=DMD Grayscale Input Trigger
+RequiredDevices=DMD_4500_DEVICE_TYPE
+Categories=DMD,Grayscale,Triggering
+Description=An example where a sequence of grayscale (8-bit) sinusoid images are displayed by a DMD under the control of external input triggers. A single trigger rule specifies that when a Rising Edge is detected on External Trigger Input 1 the next DMD sequence item will start (which therefore starts the display of the next grayscale image since multi-bit-depth images are displayed using sequence items). A separate Arduino program is contained in examples/arduino/TriggerTester.ino which can be used to generate an external trigger signal to control the DMD (or any other external hardware signal can be connected to External Trigger Input 1 which transitions for low to high). 
+CreateProjectProgram=python/dmd_grayscale_triggerin_example.py

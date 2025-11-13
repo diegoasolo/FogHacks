@@ -1,0 +1,5 @@
+Name=Camera Multiple Exposures Sequence Capture (HDR Mode)
+RequiredDevices=CMV_4000_MONO_DEVICE_TYPE
+Categories=Camera
+Description=An example of the camera capturing a sequence of images, where frames have increasing expsure times. The captured images with different exposure times can be used to increase the camera dynamic range over a single exposure time. The sequence of captured camera images read out, displayed and saved to file.
+CreateProjectProgram=python/camera_multi_exposure_example.py

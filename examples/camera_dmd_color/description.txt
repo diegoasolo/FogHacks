@@ -1,0 +1,5 @@
+Name=Camera and DMD Color Pattern Capture
+RequiredDevices=DMD_4500_DEVICE_TYPE,CMV_4000_MONO_DEVICE_TYPE
+Categories=DMD and Camera,Color
+Description=An example where a DMD displays a sequence of 24-bit color (3 channel, 8-bit per channel) patterns and a synchronizedd camera captures images of the patterns using trigger rules. The sequence of images are read from standard image files and displayed by the DMD using the Ajile API, and the sequence of captured camera images read out, displayed and saved to file. 
+CreateProjectProgram=python/camera_dmd_color_example.py

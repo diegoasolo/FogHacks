@@ -1,0 +1,5 @@
+Name=DMD Grayscale Output Trigger
+RequiredDevices=DMD_4500_DEVICE_TYPE
+Categories=DMD,Grayscale,Triggering
+Description=An example where a sequence of grayscale (8-bit) sinusoid images are displayed by a DMD with an output trigger which signals when the next DMD grayscale image starts. A single trigger rule specifies that when the DMD sequence item starts (i.e. the next grayscale image) a trigger signal on External Trigger Output 1 will be output with a hold time of half the frame rate. A separate Arduino program is contained in examples/arduino/TriggerTester.ino which can be used to monitor the external trigger signal where an LED on the Arduino flashes when an output trigger is detected (alternatively the output signal can be viewed on an oscilloscope). 
+CreateProjectProgram=python/dmd_grayscale_triggerout_example.py

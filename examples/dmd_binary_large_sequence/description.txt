@@ -1,0 +1,4 @@
+Name=DMD Binary Large Sequence
+RequiredDevices=DMD_4500_DEVICE_TYPE
+Categories=DMD,Binary,Image Generating
+Description=A relatively complex example which involves memory management on the device to make the preloaded image store larger than the default. This allows storing 4000 binary images on the device.

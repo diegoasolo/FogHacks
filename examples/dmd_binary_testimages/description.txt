@@ -1,0 +1,5 @@
+Name=DMD Binary Test Images
+RequiredDevices=DMD_4500_DEVICE_TYPE
+Categories=DMD,Binary,Image Reading
+Description=An example where a DMD displays a sequence of binary (1-bit) images which are animated at a configurable frame rate. The sequence of images are read from standard image files and displayed by the DMD using the Ajile API.
+CreateProjectProgram=python/dmd_binary_testimages_example.py

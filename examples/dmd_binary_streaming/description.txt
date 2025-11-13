@@ -1,0 +1,4 @@
+Name=DMD Binary Streaming
+RequiredDevices=DMD_4500_DEVICE_TYPE
+Categories=DMD,Binary,Streaming
+Description=An example of streaming an infinite sequence of binary (1-bit) patterns which are generated programatically and sent to the device with the Ajile API.

@@ -1,0 +1,5 @@
+Name=DMD Color Bar Test Patterns
+RequiredDevices=DMD_4500_DEVICE_TYPE
+Categories=DMD,Color,Image Reading
+Description=A simple example where a DMD displays a binary color (3-bit) test pattern at a configurable frame rate. The 3-bit color image is composed of separate red, green and blue images. The 3 bitplanes are displayed slowly in their individual colors before finally being displayed in 3-bit color by switching between them at speed.
+CreateProjectProgram=python/dmd_color_barpattern_example.py

@@ -1,0 +1,5 @@
+Name=DMD Color De Bruijn Patterns
+RequiredDevices=DMD_4500_DEVICE_TYPE
+Categories=DMD,Color,Image Generating
+Description=An example where a DMD displays a 3-bit color pattern which is a De Bruijn sequence. The generated De Bruijn pattern uses 6 colorsto encode the pattern. The patterns are shown horizontally, vertically, and also diagonally using a special diagonal transform which optimizes patterns for the diagnonal micromirror format of the DMD4500 device. 
+CreateProjectProgram=python/dmd_color_debruijn_example.py

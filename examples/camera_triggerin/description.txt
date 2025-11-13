@@ -1,0 +1,5 @@
+Name=Camera Input Trigger Capture
+RequiredDevices=CMV_4000_MONO_DEVICE_TYPE
+Categories=Camera,Triggering
+Description=An example of the camera capturing a sequence of images under the control of an external input trigger signal. A single trigger rule specifies that when a Rising Edge is detected on External Trigger Input 1 the camera exposure for the next frame will start. Optionally the bit depth, region of interest, and row skip properties can be changed with command line arguments. The sequence of captured camera images read out, displayed and saved to file.
+CreateProjectProgram=python/camera_triggerin_example.py
