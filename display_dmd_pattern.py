@@ -29,7 +29,7 @@ def CreateProject(sequenceID=1, sequenceRepeatCount=10, frameTime_ms=-1, compone
     
     # Determine image path
     if image_path is None:
-        image_path = os.path.join(currentPath, "rings_phase_hologram_dmd.png")
+        image_path = os.path.join(currentPath, "cat_1.png")
     elif not os.path.isabs(image_path):
         # If relative path, make it relative to current directory
         image_path = os.path.join(currentPath, image_path)
@@ -52,9 +52,24 @@ def CreateProject(sequenceID=1, sequenceRepeatCount=10, frameTime_ms=-1, compone
     # create the image
     testImage = aj.Image(1)
     print(f"Reading DMD pattern file: {image_path}")
-    testImage.ReadFromFile(image_path, aj.DMD_4500_DEVICE_TYPE)
+    read_result = testImage.ReadFromFile(image_path, aj.DMD_4500_DEVICE_TYPE)
+    if read_result != aj.ERROR_NONE:
+        print(f"Error: ReadFromFile returned {read_result} when reading {image_path}")
+        # attempt to read without specifying device type to see if conversion fails
+        try:
+            alt_result = testImage.ReadFromFile(image_path)
+            print(f"ReadFromFile without dstDeviceType returned {alt_result}")
+        except Exception as e:
+            print(f"ReadFromFile without dstDeviceType raised: {e}")
+        raise RuntimeError(f"Failed to load image {image_path} (code {read_result})")
     project.AddImage(testImage)
     print(f"Image added to project with ID: {testImage.ID()}")
+    # diagnostic info about the loaded image
+    try:
+        print(f"Image properties: Width={testImage.Width()}, Height={testImage.Height()}, BitDepth={testImage.BitDepth()}")
+    except Exception:
+        # if methods not present, ignore
+        pass
     # add preview images (which will be used by the GUI only for display, ignore if not opening the example in the GUI)
     example_helper.AddPreviewImageFile(project, image_path, testImage.ID(), testImage.ID(), 1)
     
@@ -78,9 +93,12 @@ def CreateProject(sequenceID=1, sequenceRepeatCount=10, frameTime_ms=-1, compone
 
         
 if __name__ == "__main__":
-    # Get image path from command line if provided
+    # Get image path from command line if provided. If the first argument
+    # looks like an option (starts with '-'), treat it as a flag and do
+    # not use it as the image path. This prevents flags like '--usb3'
+    # being interpreted as a filename.
     image_path = None
-    if len(sys.argv) > 1:
+    if len(sys.argv) > 1 and not sys.argv[1].startswith('-'):
         image_path = sys.argv[1]
     
     # Create a wrapper function that passes the image_path
