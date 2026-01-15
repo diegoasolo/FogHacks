@@ -1,0 +1,19 @@
+{
+  "num_masks": 4,
+  "scattering_strength": 0.1,
+  "mask_size": 0.02,
+  "phase_mask_complexity": 5,
+  "layer_thickness": 0.01,
+  "simulation_extent_x": 0.03,
+  "simulation_extent_y": 0.03,
+  "simulation_Nx": 2400,
+  "simulation_Ny": 2400,
+  "phase_mask_files": [
+    "phase_mask_1.npy",
+    "phase_mask_2.npy",
+    "phase_mask_3.npy",
+    "phase_mask_4.npy"
+  ],
+  "grid_xx_file": "grid_xx.npy",
+  "grid_yy_file": "grid_yy.npy"
+}
