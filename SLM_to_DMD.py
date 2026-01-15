@@ -214,9 +214,17 @@ def convert_slm_to_dmd(phase_image_path, output_path=None, nu0=None,
         base_name = Path(phase_image_path).stem
         output_path = f"{base_name}_dmd.png"
     
-    binary_image = Image.fromarray(binary_pattern * 255, mode='L')
-    binary_image.save(output_path)
+    # Ensure binary pattern is in correct format for DMD (0 = black/off, 255 = white/on)
+    # Convert to uint8 with values 0 or 255
+    binary_array = (binary_pattern * 255).astype(np.uint8)
+    binary_image = Image.fromarray(binary_array, mode='L')
+    
+    # Save as PNG (DMD driver expects PNG format)
+    binary_image.save(output_path, format='PNG')
     print(f"Saved binary DMD pattern to: {output_path}")
+    print(f"  Image size: {binary_array.shape[1]} x {binary_array.shape[0]} pixels")
+    print(f"  On pixels (white): {np.sum(binary_pattern)} ({100*np.sum(binary_pattern)/binary_pattern.size:.1f}%)")
+    print(f"  Off pixels (black): {np.sum(1-binary_pattern)} ({100*np.sum(1-binary_pattern)/binary_pattern.size:.1f}%)")
     
     # Visualize
     if visualize:
