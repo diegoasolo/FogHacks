@@ -1,0 +1,11 @@
+{
+  "image_size_x": 0.01,
+  "image_size_y": 0.01,
+  "simulation_extent_x": 0.03,
+  "simulation_extent_y": 0.03,
+  "simulation_Nx": 2400,
+  "simulation_Ny": 2400,
+  "phase_mask_file": "hologram_phase_mask.npy",
+  "grid_xx_file": "grid_xx.npy",
+  "grid_yy_file": "grid_yy.npy"
+}

@@ -2,17 +2,19 @@ from diffractsim_main import diffractsim
 diffractsim.set_backend("CPU") #Change the string to "CUDA" to use GPU acceleration
 
 from diffractsim_main.diffractsim import MonochromaticField, ApertureFromImage, Lens, mm, um, nm, cm, FourierPhaseRetrieval, PSF_convolution, apply_transfer_function, bd, SLM
-from Random_Phase_Mask_Scattering import PhaseMaskScattering
+from Random_Phase_Mask_Scattering import PhaseMaskScattering, load_hologram_phase_mask, get_hologram_pixel, get_hologram_info, edit_hologram_pixel
+
 
 # ============================================================================
-# Configuration: Phase mask storage path
+# Configuration: Phase mask storage paths
 # ============================================================================
-# Change this path to load phase masks from a different location
-# This should match SAVE_DIR in generate_phase_masks.py
+# Change these paths to load phase masks from different locations
+# These should match the paths used when saving the masks
 PHASE_MASK_SAVE_PATH = './model_training/training_masks_1'
+HOLOGRAM_MASK_SAVE_PATH = './model_training/hologram_mask_rings'
 
-
-
+# Example for editing a pixel in the hologram phase mask
+# edit_hologram_pixel(HOLOGRAM_MASK_SAVE_PATH, x coordinate, y coordinate, number between -pi and pi)
 
 #Add a plane wave
 F = MonochromaticField(
@@ -20,11 +22,19 @@ F = MonochromaticField(
 )
 
 
-# load the hologram as a phase mask aperture
-F.add(ApertureFromImage(
-     amplitude_mask_path= "./diffractsim_main/examples/apertures/white_background.png", 
-     phase_mask_path= "rings_phase_hologram.png", image_size=(10.0 * mm, 10.0 * mm), simulation = F)
-)
+# Load the hologram phase mask (from saved file if available, otherwise from image)
+try:
+    # Try to load from saved file
+    hologram_slm = load_hologram_phase_mask(F, HOLOGRAM_MASK_SAVE_PATH)
+    F.add(hologram_slm)
+    print("Loaded hologram phase mask from saved file")
+except FileNotFoundError:
+    # Fallback to loading from image
+    print("Saved hologram mask not found, loading from image...")
+    F.add(ApertureFromImage(
+         amplitude_mask_path= "./diffractsim_main/examples/apertures/white_background.png", 
+         phase_mask_path= "rings_phase_hologram.png", image_size=(10.0 * mm, 10.0 * mm), simulation = F)
+    )
 
 
 # #plot colors at z = 0
@@ -49,6 +59,9 @@ scattering_system.apply_scattering()
 scattering_distance = scattering_system.get_total_scattering_distance()
 final_distance = z - scattering_distance
 F.propagate(final_distance)
+
+# Alternatively, propagate directly to z without scattering (comment lines 50-60 and uncomment line 63)
+# F.propagate(z)
 
 # Plot the final result at the image plane
 print("Plotting final result...")
