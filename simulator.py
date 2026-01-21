@@ -3,17 +3,23 @@ diffractsim.set_backend("CPU") #Change the string to "CUDA" to use GPU accelerat
 
 from diffractsim_main.diffractsim import MonochromaticField, ApertureFromImage, Lens, mm, um, nm, cm, FourierPhaseRetrieval, PSF_convolution, apply_transfer_function, bd, SLM
 from Random_Phase_Mask_Scattering import PhaseMaskScattering, load_hologram_phase_mask, get_hologram_pixel, get_hologram_info, edit_hologram_pixel
-
+from PIL import Image
+import numpy as np
 
 # ============================================================================
-# Configuration: Phase mask storage paths
+# Configuration: Phase mask and output image storage paths
 # ============================================================================
 # Change these paths to load phase masks from different locations
 # These should match the paths used when saving the masks
 PHASE_MASK_SAVE_PATH = './model_training/training_masks_1'
 HOLOGRAM_MASK_SAVE_PATH = './model_training/hologram_mask_rings'
 
-# Example for editing a pixel in the hologram phase mask
+# Output image path and name
+OUTPUT_IMAGE_PATH = './model_training/outputs'
+OUTPUT_IMAGE_NAME = 'test.png'
+
+
+# Example for editing RL to pixel in the hologram phase mask
 # edit_hologram_pixel(HOLOGRAM_MASK_SAVE_PATH, x coordinate, y coordinate, number between -pi and pi)
 
 #Add a plane wave
@@ -29,12 +35,8 @@ try:
     F.add(hologram_slm)
     print("Loaded hologram phase mask from saved file")
 except FileNotFoundError:
-    # Fallback to loading from image
-    print("Saved hologram mask not found, loading from image...")
-    F.add(ApertureFromImage(
-         amplitude_mask_path= "./diffractsim_main/examples/apertures/white_background.png", 
-         phase_mask_path= "rings_phase_hologram.png", image_size=(10.0 * mm, 10.0 * mm), simulation = F)
-    )
+    print("Saved hologram mask not found")
+    
 
 
 # #plot colors at z = 0
@@ -67,3 +69,9 @@ F.propagate(final_distance)
 print("Plotting final result...")
 rgb = F.get_colors()
 F.plot_colors(rgb)
+
+# Save the output image (no axes, no grid)
+img_array = (np.clip(rgb, 0, 1) * 255).astype(np.uint8)
+img = Image.fromarray(img_array)
+img.save(OUTPUT_IMAGE_PATH + '/' + OUTPUT_IMAGE_NAME)
+print("Saved Image")
