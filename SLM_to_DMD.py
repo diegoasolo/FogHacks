@@ -20,6 +20,59 @@ from PIL import Image
 from pathlib import Path
 from matplotlib.colors import rgb_to_hsv
 
+# DMD dimensions
+DMD_WIDTH = 1140
+DMD_HEIGHT = 912
+
+
+def pad_image_for_dmd(image_array, center=True):
+    """
+    Pad an image array to DMD dimensions (912x1140) with zeros (black).
+    
+    Parameters:
+    -----------
+    image_array : ndarray
+        Input image array (e.g., 800x800)
+    center : bool
+        If True, center the image. If False, place at top-left.
+    
+    Returns:
+    --------
+    padded : ndarray
+        Padded image array (912x1140)
+    """
+    orig_height, orig_width = image_array.shape[:2]
+    
+    print(f"Original image size: {orig_width}x{orig_height}")
+    print(f"Target DMD size: {DMD_WIDTH}x{DMD_HEIGHT}")
+    
+    # Check if image is already the right size
+    if orig_width == DMD_WIDTH and orig_height == DMD_HEIGHT:
+        print("Image already matches DMD dimensions, no padding needed.")
+        return image_array
+    
+    # Check if image is too large
+    if orig_width > DMD_WIDTH or orig_height > DMD_HEIGHT:
+        raise ValueError(f"Image ({orig_width}x{orig_height}) is larger than DMD ({DMD_WIDTH}x{DMD_HEIGHT})")
+    
+    # Create padded array filled with zeros (black)
+    padded = np.zeros((DMD_HEIGHT, DMD_WIDTH), dtype=image_array.dtype)
+    
+    # Calculate position for the original image
+    if center:
+        x_offset = (DMD_WIDTH - orig_width) // 2
+        y_offset = (DMD_HEIGHT - orig_height) // 2
+    else:
+        x_offset = 0
+        y_offset = 0
+    
+    # Place the original image in the padded array
+    padded[y_offset:y_offset + orig_height, x_offset:x_offset + orig_width] = image_array
+    
+    print(f"Image placed at offset: ({x_offset}, {y_offset})")
+    
+    return padded
+
 
 def load_phase_from_image(image_path, image_size=None, target_size=None):
     """
@@ -162,7 +215,7 @@ def estimate_carrier_frequency(phase, safety_factor=2.0):
 
 def convert_slm_to_dmd(phase_image_path, output_path=None, nu0=None, 
                       pixel_size_x=1.0, pixel_size_y=1.0, target_size=None,
-                      visualize=True):
+                      visualize=True, pad_to_dmd=True, center_image=True):
     """
     Convert an SLM phase hologram image to a DMD binary pattern.
     
@@ -182,11 +235,15 @@ def convert_slm_to_dmd(phase_image_path, output_path=None, nu0=None,
         Target size (Nx, Ny) for resampling
     visualize : bool, optional
         Whether to display visualization plots
+    pad_to_dmd : bool, optional
+        If True, pad the output to DMD dimensions (912x1140) with zeros
+    center_image : bool, optional
+        If True and padding, center the image. If False, place at top-left.
     
     Returns:
     --------
     binary_pattern : ndarray
-        Binary DMD pattern (0 or 1)
+        Binary DMD pattern (0 or 1), padded to 912x1140 if pad_to_dmd=True
     """
     print(f"Loading phase hologram from: {phase_image_path}")
     
@@ -208,6 +265,11 @@ def convert_slm_to_dmd(phase_image_path, output_path=None, nu0=None,
     # Threshold to binary
     print("Thresholding to binary DMD pattern...")
     binary_pattern = threshold_to_binary(amplitude_pattern)
+    
+    # Pad to DMD dimensions if requested
+    if pad_to_dmd:
+        print("Padding image to DMD dimensions...")
+        binary_pattern = pad_image_for_dmd(binary_pattern, center=center_image)
     
     # Save binary pattern
     if output_path is None:
@@ -276,7 +338,7 @@ def convert_slm_to_dmd(phase_image_path, output_path=None, nu0=None,
 
 if __name__ == "__main__":
     # Convert the rings phase hologram to DMD pattern
-    phase_image_path = "rings_phase_hologram.png"
+    phase_image_path = "hologram_mask.png"
     
     # Check if file exists
     if not Path(phase_image_path).exists():
@@ -284,12 +346,15 @@ if __name__ == "__main__":
         print("Please make sure the file exists in the current directory.")
     else:
         # Convert with automatic carrier frequency estimation
+        # Output will be padded to DMD dimensions (912x1140) with zeros
         binary_pattern = convert_slm_to_dmd(
             phase_image_path,
-            output_path="rings_phase_hologram_dmd.png",
-            target_size=None, # dont change just set size of phase mask accoruding to DMD
+            output_path="rings_phase_hologram_padded_dmd.png",
+            target_size=None,  # dont change just set size of phase mask according to DMD
             nu0=None,  # Auto-estimate
-            visualize=True
+            visualize=True,
+            pad_to_dmd=True,  # Pad to 912x1140 with zeros
+            center_image=True  # Center the pattern on the DMD
         )
         
         print(f"Binary pattern shape: {binary_pattern.shape}")
