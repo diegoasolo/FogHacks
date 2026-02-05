@@ -21,8 +21,8 @@ from pathlib import Path
 from matplotlib.colors import rgb_to_hsv
 
 # DMD dimensions
-DMD_WIDTH = 1140
-DMD_HEIGHT = 912
+DMD_WIDTH = 912
+DMD_HEIGHT = 1140
 
 
 def pad_image_for_dmd(image_array, center=True):
@@ -349,7 +349,7 @@ if __name__ == "__main__":
         # Output will be padded to DMD dimensions (912x1140) with zeros
         binary_pattern = convert_slm_to_dmd(
             phase_image_path,
-            output_path="rings_phase_hologram_padded_dmd.png",
+            output_path="rings_phase_hologram_padded1_dmd.png",
             target_size=None,  # dont change just set size of phase mask according to DMD
             nu0=None,  # Auto-estimate
             visualize=True,
