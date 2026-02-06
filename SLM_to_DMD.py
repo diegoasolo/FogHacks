@@ -297,7 +297,7 @@ def convert_slm_to_dmd(phase_image_path, output_path=None, nu0=None,
         axes[0].set_title('Original Phase Pattern φ(x,y)')
         axes[0].set_xlabel('x (pixels)')
         axes[0].set_ylabel('y (pixels)')
-        plt.colorbar(im1, ax=axes[0], label='Phase (radians)', ticks=[-np.pi, -np.pi/2, 0, np.pi/2, np.pi], shrink=0.7)
+        plt.colorbar(im1, ax=axes[0], label='Phase (radians)', ticks=[-np.pi, -np.pi/2, 0, np.pi/2, np.pi], shrink=0.4)
         
         # # Amplitude pattern
         # im2 = axes[0, 1].imshow(amplitude_pattern, cmap='gray', vmin=0, vmax=1)
@@ -349,7 +349,7 @@ if __name__ == "__main__":
         # Output will be padded to DMD dimensions (912x1140) with zeros
         binary_pattern = convert_slm_to_dmd(
             phase_image_path,
-            output_path="rings_phase_hologram_padded1_dmd.png",
+            output_path="rings_phase_hologram_padded2_dmd.png",
             target_size=None,  # dont change just set size of phase mask according to DMD
             nu0=None,  # Auto-estimate
             visualize=True,
