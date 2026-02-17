@@ -29,7 +29,7 @@ def CreateProject(sequenceID=1, sequenceRepeatCount=10, frameTime_ms=-1, compone
     
     # Determine image path
     if image_path is None:
-        image_path = os.path.join(currentPath, "cat_1.png")
+        image_path = os.path.join(currentPath, "images", "rings_phase_hologram_dmd.png")
     elif not os.path.isabs(image_path):
         # If relative path, make it relative to current directory
         image_path = os.path.join(currentPath, image_path)

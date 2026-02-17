@@ -35,6 +35,19 @@ def GenerateCheckerboards(width, height):
 
     return boardImages
 
+# helper function which creates a horizontal gradient pattern and its inverse
+def GenerateHorizontalGradients(width, height):
+
+    # Create horizontal gradient from 0 to 255
+    gradient_row = numpy.linspace(0, 255, width, dtype=numpy.uint8)
+    
+    # Repeat the row for all heights
+    image = numpy.tile(gradient_row, (height, 1)).reshape(height, width, 1)
+    
+    
+    
+    return image
+
 # creates an Ajile project and returns in
 def CreateProject(sequenceID=1, sequenceRepeatCount=0, frameTime_ms=-1, components=None):
 
@@ -58,7 +71,8 @@ def CreateProject(sequenceID=1, sequenceRepeatCount=0, frameTime_ms=-1, componen
         deviceType = aj.DMD_4500_DEVICE_TYPE
 
     # generate a list of gray code images (which are numpy arrays)
-    boardImages = GenerateCheckerboards(imageWidth, imageHeight)
+    # boardImages = GenerateCheckerboards(imageWidth, imageHeight)
+    boardImages = GenerateHorizontalGradients(imageWidth, imageHeight)
     
     # create the images from the numpy gray code images and add them to our project
     imageCount = 1
