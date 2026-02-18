@@ -17,7 +17,7 @@ simulation_extent_x = 30 * mm
 simulation_extent_y = 30 * mm
 simulation_Nx = 2400
 simulation_Ny = 2400
-wavelength = 532.8 * nm # currently green
+wavelength = 650 * nm # CHANGED TO RED
 
 # ============================================================================
 # Generate Hologram Mask
@@ -38,12 +38,12 @@ F = MonochromaticField(
 print(f"\nGenerating fourier plane phase hologram from {TARGET_AMPLITUDE_PATH}...")
 PR = FourierPhaseRetrieval(target_amplitude_path = TARGET_AMPLITUDE_PATH, new_size= (400,400), pad = (200,200))
 PR.retrieve_phase_mask(max_iter = 200, method = 'Conjugate-Gradient')
-PR.save_retrieved_phase_as_image('hologram_mask.png')
+PR.save_retrieved_phase_as_image('hologram_mask_red.png')
 
 
 
 print(f"\nSaving hologram mask to {SAVE_DIR}...")
-save_hologram_phase_mask(F, 'hologram_mask.png', (10.0 * mm, 10.0 * mm), SAVE_DIR)
+save_hologram_phase_mask(F, 'hologram_mask_red.png', (10.0 * mm, 10.0 * mm), SAVE_DIR)
 
 print("\n" + "=" * 70)
 print("Hologram mask generation complete!")
