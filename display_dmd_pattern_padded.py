@@ -6,7 +6,9 @@ Use for pre-padded images like rings_phase_hologram_padded_dmd.png.
 If display still looks slightly stretched (e.g. circles appear elliptical), try:
   --compress-v=0.95   to pre-compress vertically (fixes vertical stretch)
   --compress-h=0.95   to pre-compress horizontally (fixes horizontal stretch)
-Adjust the value (0.9-1.0) until circles look round.
+  --compress-v=1.05   to expand vertically (fixes vertical compression)
+  --compress-h=1.05   to expand horizontally (fixes horizontal compression)
+Values <1.0 compress (pad with black), >1.0 expand (center-crop to fit DMD).
 """
 
 import ajiledriver as aj
@@ -28,8 +30,8 @@ def load_padded_dmd_image(image_path, dmd_width=DMD_WIDTH, dmd_height=DMD_HEIGHT
                           compress_v=1.0, compress_h=1.0):
     """
     Load an image for DMD display. If already 912x1140, use as-is (no resize).
-    compress_v, compress_h: aspect correction (0.9-1.0) - pre-compress to counteract display stretch.
-    E.g. compress_v=0.95 if display stretches vertically.
+    compress_v, compress_h: aspect correction factors.
+    <1.0 compresses (pads with black), >1.0 expands (center-crops to fit DMD).
     """
     img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
     if img is None:
@@ -43,16 +45,26 @@ def load_padded_dmd_image(image_path, dmd_width=DMD_WIDTH, dmd_height=DMD_HEIGHT
         dmd_pattern = cv2.resize(img, (dmd_width, dmd_height), interpolation=cv2.INTER_NEAREST)
         print(f"  Original: {orig_w}x{orig_h} -> resized to {dmd_width}x{dmd_height}")
 
-    # Aspect correction: pre-compress to counteract display stretch
     if compress_v != 1.0 or compress_h != 1.0:
         new_w = int(dmd_width * compress_h)
         new_h = int(dmd_height * compress_v)
         dmd_pattern = cv2.resize(dmd_pattern, (new_w, new_h), interpolation=cv2.INTER_NEAREST)
-        padded = np.zeros((dmd_height, dmd_width), dtype=dmd_pattern.dtype)
-        y0 = (dmd_height - new_h) // 2
-        x0 = (dmd_width - new_w) // 2
-        padded[y0:y0 + new_h, x0:x0 + new_w] = dmd_pattern
-        dmd_pattern = padded
+        result = np.zeros((dmd_height, dmd_width), dtype=dmd_pattern.dtype)
+
+        # For each axis: if scaled is smaller, pad into center; if larger, crop from center
+        if new_h <= dmd_height:
+            src_y, dst_y, copy_h = 0, (dmd_height - new_h) // 2, new_h
+        else:
+            src_y, dst_y, copy_h = (new_h - dmd_height) // 2, 0, dmd_height
+
+        if new_w <= dmd_width:
+            src_x, dst_x, copy_w = 0, (dmd_width - new_w) // 2, new_w
+        else:
+            src_x, dst_x, copy_w = (new_w - dmd_width) // 2, 0, dmd_width
+
+        result[dst_y:dst_y + copy_h, dst_x:dst_x + copy_w] = \
+            dmd_pattern[src_y:src_y + copy_h, src_x:src_x + copy_w]
+        dmd_pattern = result
         print(f"  Aspect correction: compress_v={compress_v}, compress_h={compress_h}")
 
     if len(dmd_pattern.shape) == 2:
