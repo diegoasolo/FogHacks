@@ -338,7 +338,7 @@ def convert_slm_to_dmd(phase_image_path, output_path=None, nu0=None,
 
 if __name__ == "__main__":
     # Convert the rings phase hologram to DMD pattern
-    phase_image_path = "hologram_mask.png"
+    phase_image_path = "hologram_mask_red.png"
     
     # Check if file exists
     if not Path(phase_image_path).exists():
@@ -349,7 +349,7 @@ if __name__ == "__main__":
         # Output will be padded to DMD dimensions (912x1140) with zeros
         binary_pattern = convert_slm_to_dmd(
             phase_image_path,
-            output_path="rings_phase_hologram_padded_dmd.png",
+            output_path="rings_phase_hologram_red_padded_dmd.png",
             target_size=None,  # dont change just set size of phase mask according to DMD
             nu0=None,  # Auto-estimate
             visualize=True,
