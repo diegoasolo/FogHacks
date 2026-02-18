@@ -81,7 +81,7 @@ def CreateProject(sequenceID=1, sequenceRepeatCount=10, frameTime_ms=-1, compone
     currentPath = os.path.dirname(os.path.realpath(__file__))
 
     if image_path is None:
-        image_path = os.path.join(currentPath, "images" , "rings_phase_hologram_padded_dmd.png")
+        image_path = os.path.join(currentPath, "images" , "rings_phase_hologram_red_padded_dmd.png")
     elif not os.path.isabs(image_path):
         image_path = os.path.join(currentPath, image_path)
 
@@ -165,8 +165,11 @@ if __name__ == "__main__":
     if args:
         image_path = args[0]
     save_preview = '--save-preview' in sys.argv
-    compress_v = _parse_float_arg('--compress-v')
-    compress_h = _parse_float_arg('--compress-h')
+    # compress_v = _parse_float_arg('--compress-v')
+    # compress_h = _parse_float_arg('--compress-h')
+    # i harded coded aspect ratio cuz this the one that works the best, but uncomment above to allow custom values via command line
+    compress_v = 1.3
+    compress_h = 0.9
 
     # Strip custom args for example_helper
     to_remove = [image_path, '--save-preview']
